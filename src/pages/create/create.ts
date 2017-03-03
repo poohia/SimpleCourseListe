@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { AlertController } from 'ionic-angular';
 
+
+import { FORMAT, SclDate } from '../../SimpleCourseListe/SclDate'
 /******************* Pages *******************************/
 
 
@@ -13,14 +15,14 @@ import { AlertController } from 'ionic-angular';
   templateUrl: 'create.html'
 })
 export class CreatePage {
-  private title : string = "";
+  public title : string = "";
 
   private prompt = this.alertCtrl.create({
       title: 'Nom de vôtre liste',
       message: "Entrez le nom de vôtre  liste :)",
       inputs: [
         {
-          name: '',
+          name: 'title',
           placeholder: '',
           value : this.title
         },
@@ -28,23 +30,22 @@ export class CreatePage {
       buttons: [
         {
           text: 'Annuler',
-          handler: data => {
-            console.log('Cancel clicked');
-          }
+
         },
         {
           text: 'Enregistrer',
-          handler: data => {
-            console.log('Saved clicked', data);
-          }
+          handler: this.setTitleFromAlert
+
         }
       ]
     });
 
   constructor(public navCtrl: NavController, public alertCtrl: AlertController) {
       console.log("Create controller");
-      this.title = "Ma liste du 01/01/2016" ;
+      let current_date = new SclDate();
+      this.title = "Ma liste du " + current_date.format(FORMAT.DD_MM_YYYY);
       this.prompt.present();
+
   }
 
   public getTitle() : string
@@ -52,5 +53,13 @@ export class CreatePage {
      return this.title;
   }
 
+  public setTitleFromAlert(data: any ) : void
+  {
+      if(data)
+      {
+         this.title = data.title ;
+      }
+
+  }
 
 }
